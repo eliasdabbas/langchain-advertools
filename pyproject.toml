@@ -1,0 +1,17 @@
+[project]
+name = "langchain-advertools"
+version = "0.0.1"
+description = "LangChain integration for advertools"
+readme = "README.md"
+authors = [
+    { name = "Elias Dabbas", email = "eliasdabbas@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "advertools>=0.14.0",
+    "langchain>=0.3.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
