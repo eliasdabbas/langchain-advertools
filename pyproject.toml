@@ -1,6 +1,6 @@
 [project]
 name = "langchain-advertools"
-version = "0.0.1"
+version = "0.0.2"
 description = "LangChain integration for advertools"
 readme = "README.md"
 authors = [
