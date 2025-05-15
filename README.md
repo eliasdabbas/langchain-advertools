@@ -18,7 +18,7 @@ python3 -m pip install langchain-advertools
 import advertools as adv
 import pandas as pd
 adv.crawl("https://www.langchain.com/", "langchain.jsonl", follow_links=True)
-crawldf = pd.read_json("langchain.json", lines=True)
+crawldf = pd.read_json("langchain.jsonl", lines=True)
 ```
 
 We now have the full website crawled that can be read into a DataFrame `crawldf`:
