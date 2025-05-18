@@ -55,3 +55,4 @@ htmlcov/
 
 # uv lock file (optional, uncomment if you don't want to commit it)
 # uv.lock
+.python-version
