@@ -17,8 +17,12 @@ class WebsiteLoader(BaseLoader):
         df = pd.read_json(self.filepath, lines=True, chunksize=1)
         docs = []
         for line in df:
+            if line.get("body_text") is not None:
+                page_content = line["body_text"].iloc[0]
+            else:
+                page_content = ""
             doc = Document(
-                page_content=line.get("body_text", ""),
+                page_content=page_content,
                 id=line["url"].iloc[0],
                 metadata={
                     k: v
@@ -32,8 +36,12 @@ class WebsiteLoader(BaseLoader):
     def lazy_load(self):
         df = pd.read_json(self.filepath, lines=True, chunksize=1)
         for line in df:
+            if line.get("body_text") is not None:
+                page_content = line["body_text"].iloc[0]
+            else:
+                page_content = ""
             yield Document(
-                page_content=line.get("body_text", ""),
+                page_content=page_content,
                 id=line["url"].iloc[0],
                 metadata={
                     k: v
