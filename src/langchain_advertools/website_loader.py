@@ -18,7 +18,7 @@ class WebsiteLoader(BaseLoader):
         docs = []
         for line in df:
             doc = Document(
-                page_content=line.get("body_text").iloc[0],
+                page_content=line.get("body_text", ""),
                 id=line["url"].iloc[0],
                 metadata={
                     k: v
@@ -33,7 +33,7 @@ class WebsiteLoader(BaseLoader):
         df = pd.read_json(self.filepath, lines=True, chunksize=1)
         for line in df:
             yield Document(
-                page_content=line.get("body_text").iloc[0],
+                page_content=line.get("body_text", ""),
                 id=line["url"].iloc[0],
                 metadata={
                     k: v
