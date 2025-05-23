@@ -1,5 +1,6 @@
-import advertools as adv
-import pandas as pd
+import json
+from typing import Iterator, List
+
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
 
@@ -10,42 +11,23 @@ class WebsiteLoader(BaseLoader):
     This uses a website that has already been written to a jsonlines file.
     """
 
-    def __init__(self, filepath):
+    def __init__(self, filepath: str) -> None:
         self.filepath = filepath
 
-    def load(self):
-        df = pd.read_json(self.filepath, lines=True, chunksize=1)
-        docs = []
-        for line in df:
-            if line.get("body_text") is not None:
-                page_content = line["body_text"].iloc[0]
-            else:
-                page_content = ""
-            doc = Document(
-                page_content=page_content,
-                id=line["url"].iloc[0],
-                metadata={
-                    k: v
-                    for k, v in line.to_dict("records")[0].items()
-                    if k not in ["url", "body_text"]
-                },
-            )
-            docs.append(doc)
-        return docs
+    def load(self) -> List[Document]:
+        return list(self.lazy_load())
 
-    def lazy_load(self):
-        df = pd.read_json(self.filepath, lines=True, chunksize=1)
-        for line in df:
-            if line.get("body_text") is not None:
-                page_content = line["body_text"].iloc[0]
-            else:
-                page_content = ""
-            yield Document(
-                page_content=page_content,
-                id=line["url"].iloc[0],
-                metadata={
-                    k: v
-                    for k, v in line.to_dict("records")[0].items()
-                    if k not in ["url", "body_text"]
-                },
-            )
+    def lazy_load(self) -> Iterator[Document]:
+        with open(self.filepath, "r") as f:
+            for line in f:
+                data = json.loads(line)
+                page_content = data.get("body_text", "")
+                doc_id = data["url"]
+                metadata = {
+                    k: v for k, v in data.items() if k not in ["url", "body_text"]
+                }
+                yield Document(
+                    page_content=page_content,
+                    id=doc_id,
+                    metadata=metadata,
+                )
